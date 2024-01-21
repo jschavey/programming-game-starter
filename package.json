@@ -1,0 +1,20 @@
+{
+  "name": "programmer-game-starter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon --exec ts-node index.ts -w ./**/*.ts -q"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^20.11.5",
+    "dotenv": "^16.3.2",
+    "nodemon": "^3.0.3",
+    "programming-game": "latest",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}
