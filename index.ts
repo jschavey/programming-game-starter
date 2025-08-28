@@ -21,12 +21,55 @@ connect({
     key: assertEnv("API_KEY"),
   },
   onTick(heartbeat) {
-    const { player } = heartbeat;
+    const { player, units } = heartbeat;
     if (!player) return;
 
     // if we're dead, respawn
     if (player.hp <= 0) {
       return player.respawn();
+    }
+
+    // if we're low on health, retreat back to town
+    if (player.hp < player.stats.maxHp / 2) {
+      return player.move({ x: 0, y: 0 });
+    }
+
+    // if we're low on calories, eat
+    if (player.calories < 1500) {
+      // const food = player.inventory.chickenMeat.find(item => item.type === "food");
+      if (player.inventory.chickenMeat) {
+        return player.eat("chickenMeat");
+      }
+      if (player.inventory.ratMeat) {
+        return player.eat("ratMeat");
+      }
+      if (player.inventory.snakeMeat) {
+        return player.eat("snakeMeat");
+      }
+    }
+
+    // if we're heavy sell down
+    // can't get weight, jsut sell for now
+    const npc = Object.values(units)
+      .find(unit => unit.type === "npc");
+
+    if (npc) {
+      let feathers = player.inventory.feather;
+
+      if (feathers)
+      return player.sell({ items: { feather: feathers }, to: npc });
+    }
+
+
+    // fight any nearby monsters
+    const monster = Object.values(units)
+      .find(unit => unit.type === "monster");
+    
+    if (monster) {
+      if (player.tp >= 40) {
+        return player.useWeaponSkill(({skill: "headbutt", target: monster}));
+      }
+      return player.attack(monster);
     }
 
     // run to the right
