@@ -35,7 +35,7 @@ connect({
     }
 
     // if we're low on calories, eat
-    if (player.calories < 1500) {
+    if (player.calories < 2500) {
       // const food = player.inventory.chickenMeat.find(item => item.type === "food");
       if (player.inventory.chickenMeat) {
         return player.eat("chickenMeat");
@@ -53,11 +53,22 @@ connect({
     const npc = Object.values(units)
       .find(unit => unit.type === "npc");
 
+    let aid_digestion = player.inventory.aid_digestion;
+
     if (npc) {
+      if (aid_digestion && aid_digestion > 1) {
+        return player.sell({ items: { aid_digestion: aid_digestion - 1 }, to: npc });
+      }
+
       let feathers = player.inventory.feather;
 
-      if (feathers)
-      return player.sell({ items: { feather: feathers }, to: npc });
+      if (feathers) {
+        return player.sell({ items: { feather: feathers }, to: npc });
+      }
+    }
+    
+    if (player.inventory.aid_digestion && player.inventory.aid_digestion > 1) {
+      return player.move({ x: 0, y: 0 });
     }
 
 
